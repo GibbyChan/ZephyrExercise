@@ -1,0 +1,17 @@
+sample:
+  description: Hello World sample, the simplest Zephyr
+    application
+  name: Thread
+common:
+  min_ram: 
+  min_flash: 
+  tags: introduction
+  integration_platforms:
+    - native_sim
+  harness: console
+  harness_config:
+    type: one_line
+    regex:
+tests:
+  sample.basic.helloworld:
+    tags: introduction

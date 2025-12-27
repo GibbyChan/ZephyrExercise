@@ -1,0 +1,30 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm -rf ./build"
+        },
+        // {
+        //     "label": "Activate Zephyr Env",
+        //     "type": "shell",
+        //     "command": "source ./zephyrEnv.sh"
+        // },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "source ./zephyrEnv.sh && west build -b native_sim"
+        },
+        {
+            "label": "Full Rebuild",
+            "dependsOrder": "sequence", // 强制按顺序执行
+            "dependsOn": [
+                "Clean",
+                // "Activate Zephyr Env",
+                "Build"
+            ],
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}

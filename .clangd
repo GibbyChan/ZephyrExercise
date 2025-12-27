@@ -1,0 +1,6 @@
+# .clangd
+CompileFlags:
+  # 移除 clang 不支持的 GCC 专属 flag
+  Remove: ["-fno-reorder-functions", "-fno-freestanding"]
+  # 添加通用标志（通常不需要，因为 compile_commands.json 已包含）
+  Add: [--driver-mode=gcc]

@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Native SIM",
+            "type": "cppdbg",
+            "request": "launch",
+            // 指向编译生成的二进制文件路径
+            "program": "${workspaceFolder}/build/zephyr/zephyr.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            // 调试前自动执行构建任务（可选，需配合 tasks.json）
+            "preLaunchTask": "Full Rebuild"
+        }
+    ]
+}
