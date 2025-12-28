@@ -38,8 +38,16 @@ void threadA(void *dummy1, void *dummy2, void *dummy3)
 
 	printk("thread_a: thread started \n");
 
-	for(int i=5;i>0;i--){
+	int j = 2;
+
+	for(int i = 10; i > 0; i--){
 		printk("thread_a: thread loop \n");
+		j -= 1;
+		if(j == 0){
+			printk("thread_a: suspend thread a. \n");
+			k_thread_suspend(k_current_get());
+			j = 2;
+		}
 		k_msleep(SLEEPTIME);
 	}
 
@@ -62,7 +70,9 @@ void threadB(void *dummy1, void *dummy2, void *dummy3)
 	while (1)
 	{
 		printk("thread_b: thread loop \n");
-		k_msleep(SLEEPTIME);
+		k_sleep(K_MSEC(5000));
+		printk("thread_b: resume thread a. \n");
+		k_thread_resume(&threadA_data);
 	}
 
 }
