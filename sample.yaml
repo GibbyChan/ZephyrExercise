@@ -1,6 +1,5 @@
 sample:
-  description: Hello World sample, the simplest Zephyr
-    application
+  description: Thread demonstration sample
   name: Thread
 common:
   min_ram: 
