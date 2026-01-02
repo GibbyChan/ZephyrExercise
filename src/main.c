@@ -12,10 +12,12 @@
 /* size of stack area used by each thread */
 #define THREAD_A_STACKSIZE 1024
 #define THREAD_B_STACKSIZE 1024
+#define THREAD_C_STACKSIZE 1024
 
 /* scheduling priority used by each thread */
-#define THREAD_A_PRIORITY 8
-#define THREAD_B_PRIORITY 7
+#define THREAD_A_PRIORITY 7
+#define THREAD_B_PRIORITY 8
+#define THREAD_C_PRIORITY 9
 
 /* delay between greetings (in ms) */
 #define SLEEPTIME 500
@@ -23,10 +25,15 @@
 
 K_THREAD_STACK_DEFINE(threadA_stack_area, THREAD_A_STACKSIZE);
 K_THREAD_STACK_DEFINE(threadB_stack_area, THREAD_B_STACKSIZE);
+K_THREAD_STACK_DEFINE(threadC_stack_area, THREAD_C_STACKSIZE);
 
 static struct k_thread threadA_data;
 //static struct k_thread threadB_data;
+static struct k_thread threadC_data;
 
+void threadA(void *dummy1, void *dummy2, void *dummy3);
+void threadB(void *dummy1, void *dummy2, void *dummy3);
+void threadC(void *dummy1, void *dummy2, void *dummy3);
 
 /* threadA is a static thread that is spawned automatically */
 
@@ -50,6 +57,14 @@ void threadA(void *dummy1, void *dummy2, void *dummy3)
 		}
 		k_msleep(SLEEPTIME);
 	}
+
+	k_thread_create(&threadC_data, threadC_stack_area,
+			K_THREAD_STACK_SIZEOF(threadC_stack_area),
+			threadC, NULL, NULL, NULL,
+			THREAD_C_PRIORITY, 0, K_NO_WAIT);
+	k_thread_name_set(&threadC_data, "thread_c");
+
+	k_thread_join(&threadC_data, K_SECONDS(10));
 
 	printk("thread_a: sleep for 5000 ms.\n");
 	k_sleep(K_MSEC(5000));
@@ -77,9 +92,25 @@ void threadB(void *dummy1, void *dummy2, void *dummy3)
 
 }
 
+void threadC(void *dummy1, void *dummy2, void *dummy3)
+{
+	ARG_UNUSED(dummy1);
+	ARG_UNUSED(dummy2);
+	ARG_UNUSED(dummy3);
+
+	printk("thread_c: thread started \n");
+
+	for(int i = 10; i > 0; i--)
+	{
+		printk("thread_c: thread loop for the %d time \n", 10 - i + 1);
+		k_msleep(SLEEPTIME);
+	}
+
+}
+
 K_THREAD_DEFINE(THREAD_B_TID, THREAD_B_STACKSIZE, threadB, NULL, NULL, NULL, THREAD_B_PRIORITY, 0, 5000);
 
-void main(void)
+int main(void)
 {
 	printk("Main loop started \n");
 
@@ -90,4 +121,6 @@ void main(void)
 	k_thread_name_set(&threadA_data, "thread_a");
 
 	k_thread_start(&threadA_data);
+
+	return 0;
 }
